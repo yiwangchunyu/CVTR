@@ -43,7 +43,7 @@ arg = parser.parse_args()
 
 
 # custom weights initialization called on crnn
-from crnn_ctc.dataset import Dataset
+from dataset import Dataset
 
 
 def weights_init(m):
