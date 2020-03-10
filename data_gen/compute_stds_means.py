@@ -30,7 +30,7 @@ def compute_std_mean(root,path, imgW,imgH, rgb=False):
         means = np.asarray(means) / num_images
         stdevs = np.asarray(stdevs) / num_images
         print('mean=', means, 'std=', stdevs)
-        json.dump({'mean': means.tolist(), 'std': stdevs.tolist()}, open('data/images/desc/mean_std.json', 'w', encoding='utf-8'))
+        json.dump({'mean': means.tolist(), 'std': stdevs.tolist()}, open('../data/images/desc/mean_std.json', 'w', encoding='utf-8'))
         return means,stdevs
     else:
         mean=0
@@ -46,7 +46,7 @@ def compute_std_mean(root,path, imgW,imgH, rgb=False):
         mean=mean/num_images
         std=std/num_images
         print('mean=',mean,'std=',std)
-        json.dump({'mean':mean,'std':std}, open('data/images/desc/mean_std.json', 'w', encoding='utf-8'))
+        json.dump({'mean':mean,'std':std}, open('../data/images/desc/mean_std.json', 'w', encoding='utf-8'))
         return mean, std
 
 
