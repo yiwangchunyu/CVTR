@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 
 from copy import deepcopy
-import re
 
 try:
     import psyco
@@ -11,7 +10,7 @@ except:
     pass
 
 try:
-    from zh_wiki import zh2Hant, zh2Hans
+    from data_gen.zh_wiki import zh2Hant, zh2Hans
 except ImportError:
     from zhtools.zh_wiki import zh2Hant, zh2Hans
 
