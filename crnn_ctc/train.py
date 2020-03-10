@@ -88,13 +88,14 @@ def val(crnn, valid_loader, criterion, epoch, max_i=1000):
 
         if i_batch == max_i:
             break
+        i+=1
     raw_preds = converter.decode(preds.data, preds_size.data, raw=True)[:arg.n_valid_disp]
     for raw_pred, pred, gt in zip(raw_preds, sim_preds, labels):
         print('%-20s => %-20s, gt: %-20s' % (raw_pred, pred, gt))
 
     print(n_correct)
-    print(max_i * arg.batch_size)
-    accuracy = n_correct / float(max_i * arg.batch_size)
+    print(i * arg.batch_size)
+    accuracy = n_correct / float(i * arg.batch_size)
     print('Test loss: %f, accuray: %f' % (loss_avg.val(), accuracy))
 
     return accuracy
