@@ -4,7 +4,7 @@
 # #     # cc = opencc.OpenCC('s2t')
 # #     cc = opencc.OpenCC('mix2t')
 # #     return cc.convert(word)
-from data_gen import langconv
+import langconv
 
 
 def trans_by_zhtools(word):
