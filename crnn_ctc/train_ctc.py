@@ -127,7 +127,7 @@ def train(crnn, train_loader, criterion, epoch):
         if (i_batch+1) % arg.displayInterval == 0:
             print('[%d/%d][%d/%d] Loss: %f' %
                   (epoch, arg.nepoch, i_batch, len(train_loader), loss_avg.val()))
-            plot.add_loss(loss_avg.val)
+            plot.add_loss(loss_avg.val())
             loss_avg.reset()
 
 def main(crnn, train_loader, valid_loader, criterion, optimizer):
