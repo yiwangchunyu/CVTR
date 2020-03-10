@@ -1,4 +1,6 @@
 from __future__ import print_function
+import sys
+sys.path.append('../')
 from torch.utils.data import DataLoader
 import argparse
 import random
@@ -10,9 +12,9 @@ from torch.autograd import Variable
 import numpy as np
 # from warpctc_pytorch import CTCLoss
 import os
-import utils_ctc
+# import utils_ctc
 import crnn
-
+import utils_ctc
 import utils
 
 parser = argparse.ArgumentParser()
