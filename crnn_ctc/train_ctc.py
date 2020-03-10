@@ -10,10 +10,10 @@ from torch.autograd import Variable
 import numpy as np
 # from warpctc_pytorch import CTCLoss
 import os
-import utils
+import utils_ctc
 import crnn
-# import dataset
-import re
+
+import utils
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--train_root', default='../data/images/train_label.txt',help='path to training dataset')
@@ -43,7 +43,7 @@ arg = parser.parse_args()
 
 
 # custom weights initialization called on crnn
-from dataset import Dataset
+from dataset_ctc import Dataset
 
 
 def weights_init(m):
@@ -63,7 +63,7 @@ def val(crnn, valid_loader, criterion, epoch, max_i=1000):
     crnn.eval()
     i = 0
     n_correct = 0
-    loss_avg = utils.averager()
+    loss_avg = utils_ctc.averager()
 
     for i_batch, (images, labels) in enumerate(valid_loader):
         images = images.to(device)
@@ -105,7 +105,7 @@ def train(crnn, train_loader, criterion, epoch):
     for p in crnn.parameters():
         p.requires_grad = True
     crnn.train()
-    loss_avg = utils.averager()
+    loss_avg = utils_ctc.averager()
     for i_batch, (images, labels) in enumerate(train_loader):
         images = images.to(device)
         # label = utils.get_batch_label(train_dataset, index)
@@ -125,6 +125,7 @@ def train(crnn, train_loader, criterion, epoch):
         if (i_batch+1) % arg.displayInterval == 0:
             print('[%d/%d][%d/%d] Loss: %f' %
                   (epoch, arg.nepoch, i_batch, len(train_loader), loss_avg.val()))
+            plot.add_loss(loss_avg.val)
             loss_avg.reset()
 
 def main(crnn, train_loader, valid_loader, criterion, optimizer):
@@ -145,6 +146,8 @@ def main(crnn, train_loader, valid_loader, criterion, optimizer):
             torch.save(crnn.state_dict(), '{0}/crnn_best.pth'.format('./expr'))
         print("is best accuracy: {0}".format(accuracy > best_accuracy))
         epoch+=1
+        plot.add_acc(accuracy,epoch)
+    plot.show()
 
 def backward_hook(self, grad_input, grad_output):
     for g in grad_input:
@@ -152,8 +155,8 @@ def backward_hook(self, grad_input, grad_output):
 
 if __name__ == '__main__':
 
-    # args = init_args()
-    # manualSeed = random.randint(1, 10000)  #fix seed
+    plot= utils.Plot(arg.nepoch, fname='expr/loss.png')
+
     manualSeed=10
     random.seed(manualSeed)
     np.random.seed(manualSeed)
@@ -173,7 +176,7 @@ if __name__ == '__main__':
     valid_loader = DataLoader(valid_dataset, batch_size=arg.batch_size, shuffle=True, num_workers=arg.num_workers, drop_last=True)
     with open(arg.alphabet,encoding='utf-8') as f:
         alphabet=f.read()
-    converter = utils.strLabelConverter(alphabet)
+    converter = utils_ctc.strLabelConverter(alphabet)
     nclass = len(alphabet) + 1
     nc = 1
     nh=256
