@@ -10,8 +10,8 @@ from torch.autograd import Variable
 import numpy as np
 # from warpctc_pytorch import CTCLoss
 import os
-from crnn_ctc import utils
-from crnn_ctc import crnn
+import utils
+import crnn
 # import dataset
 import re
 
