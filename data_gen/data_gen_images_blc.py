@@ -11,8 +11,8 @@ import numpy as np
 from PIL import Image, ImageFont, ImageDraw, ImageFilter
 from tqdm import tqdm
 
-from data_gen.compute_stds_means import compute_std_mean
-from data_gen.utils import trans_by_zhtools
+from compute_stds_means import compute_std_mean
+from utils import trans_by_zhtools
 
 
 def sampleWord(length=10,source='',type=1,ch=''):
