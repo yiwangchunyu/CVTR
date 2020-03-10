@@ -7,6 +7,7 @@ import math
 import os
 import torch
 from PIL import Image
+from torchvision.transforms import ToTensor
 
 
 class Dataset(Dataset):
@@ -17,6 +18,7 @@ class Dataset(Dataset):
         self.transforms = transforms
         self.imgH=imgH
         self.imgW=imgW
+        self.toTensor=ToTensor()
 
 
     def get_datalabels(self, datalabels_path):
@@ -30,21 +32,15 @@ class Dataset(Dataset):
     def __getitem__(self, index):
         image_name = self.img_root + '/' + self.datalabels[index][0]
         image_label = self.datalabels[index][1]
-        image = cv2.imread(image_name)
-        # print(self.img_root+'/'+image_name)
-        image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-        h, w = image.shape
-        image = cv2.resize(image, (0, 0), fx=self.imgW / w, fy=self.imgH / h, interpolation=cv2.INTER_CUBIC)
-        image = (np.reshape(image, (32, self.imgW, 1))).transpose(2, 0, 1)
-
-        image = image.astype(np.float32) / 255.
-        image = torch.from_numpy(image).type(torch.FloatTensor)
+        image = Image.open(image_name).convert('L')
+        image=image.resize((self.imgW,self.imgH), Image.BILINEAR)
+        image = self.toTensor(image)
         image.sub_(0.5).div_(0.5)
         return image, image_label
 
 
 if __name__ == '__main__':
     dataset = Dataset("../data/images/train", "../data/images/train_label.txt",)
-    dataloader = DataLoader(dataset, batch_size=8, shuffle=False)
+    dataloader = DataLoader(dataset, batch_size=8, shuffle=True, drop_last=True)
     for i_batch, (image, index) in enumerate(dataloader):
         print(image.shape)
