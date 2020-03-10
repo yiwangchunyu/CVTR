@@ -132,7 +132,7 @@ def main(crnn, train_loader, valid_loader, criterion, optimizer):
     criterion = criterion.to(device)
     epoch = 0
     best_accuracy = 0.5
-    while epoch < 100:
+    while epoch < arg.nepoch:
         train(crnn, train_loader, criterion, epoch)
         ## max_i: cut down the consuming time of testing, if you'd like to validate on the whole testset, please set it to len(val_loader)
         accuracy = val(crnn, valid_loader, criterion, epoch, max_i=1000)
