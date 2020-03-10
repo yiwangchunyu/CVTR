@@ -166,7 +166,7 @@ if __name__ == '__main__':
         os.mkdir(arg.expr)
     # read train set
     train_dataset = Dataset(arg.train_image_root, arg.train_root,)
-    valid_dataset = Dataset(arg.train_image_root, arg.valid_root)
+    valid_dataset = Dataset(arg.valid_image_root, arg.valid_root)
 
     train_loader = DataLoader(train_dataset, batch_size=arg.batch_size, shuffle=True, num_workers=arg.num_workers, drop_last=True)
     valid_loader = DataLoader(valid_dataset, batch_size=arg.batch_size, shuffle=True, num_workers=arg.num_workers, drop_last=True)
