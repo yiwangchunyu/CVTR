@@ -132,13 +132,13 @@ def train(crnn, train_loader, criterion, epoch):
             plot.add_loss(loss_avg.val())
             loss_avg.reset()
 
-        if arg.displayTrain:
-            _, preds = preds.max(2)
-            preds = preds.transpose(1, 0).contiguous().view(-1)
-            sim_preds = converter.decode(preds.data, preds_size.data, raw=False)
-            raw_preds = converter.decode(preds.data, preds_size.data, raw=True)[:arg.n_valid_disp]
-            for raw_pred, pred, gt in zip(raw_preds, sim_preds, labels):
-                print('%-20s => %-20s, gt: %-20s' % (raw_pred, pred, gt))
+            if arg.displayTrain:
+                _, preds = preds.max(2)
+                preds = preds.transpose(1, 0).contiguous().view(-1)
+                sim_preds = converter.decode(preds.data, preds_size.data, raw=False)
+                raw_preds = converter.decode(preds.data, preds_size.data, raw=True)[:arg.n_valid_disp]
+                for raw_pred, pred, gt in zip(raw_preds, sim_preds, labels):
+                    print('%-20s => %-20s, gt: %-20s' % (raw_pred, pred, gt))
 
 
 def main(crnn, train_loader, valid_loader, criterion, optimizer):
