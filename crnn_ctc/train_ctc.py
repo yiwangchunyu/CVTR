@@ -33,6 +33,7 @@ parser.add_argument('--opt', default='adam', help='select optimizer')
 parser.add_argument('--nc', type=int, default=1, help='')
 parser.add_argument('--expr', default='expr', help='Where to store samples and models')
 parser.add_argument('--displayInterval', type=int, default=1, help='Interval to be displayed')
+parser.add_argument('--displayTrain', type=bool, default=False, help='Interval to be displayed')
 # parser.add_argument('--testInterval', type=int, default=1, help='Interval to be displayed')
 # parser.add_argument('--validInterval', type=int, default=1, help='Interval to be displayed')
 # parser.add_argument('--saveInterval', type=int, default=1, help='Interval to save model')
@@ -118,6 +119,7 @@ def train(crnn, train_loader, criterion, epoch):
         preds_size = torch.IntTensor([preds.size(0)] * batch_size)
         # print(preds.shape, text.shape, preds_size.shape, length.shape)
         # torch.Size([41, 16, 6736]) torch.Size([160]) torch.Size([16]) torch.Size([16])
+
         cost = criterion(preds, text, preds_size, length) / batch_size
         crnn.zero_grad()
         cost.backward()
@@ -129,6 +131,15 @@ def train(crnn, train_loader, criterion, epoch):
                   (epoch, arg.nepoch, i_batch, len(train_loader), loss_avg.val()))
             plot.add_loss(loss_avg.val())
             loss_avg.reset()
+
+        if arg.displayTrain:
+            _, preds = preds.max(2)
+            preds = preds.transpose(1, 0).contiguous().view(-1)
+            sim_preds = converter.decode(preds.data, preds_size.data, raw=False)
+            raw_preds = converter.decode(preds.data, preds_size.data, raw=True)[:arg.n_valid_disp]
+            for raw_pred, pred, gt in zip(raw_preds, sim_preds, labels):
+                print('%-20s => %-20s, gt: %-20s' % (raw_pred, pred, gt))
+
 
 def main(crnn, train_loader, valid_loader, criterion, optimizer):
 
