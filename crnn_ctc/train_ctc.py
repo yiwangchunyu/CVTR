@@ -27,6 +27,9 @@ parser.add_argument('--valid_image_root', default='../data/images/valid',help=''
 parser.add_argument('--alphabet', default='../data/images/alphabet.txt', help='')
 parser.add_argument('--direction', type=str, default='horizontal', help='')
 parser.add_argument('--std_mean_file', type=str, default='../data/images/desc/mean_std.json', help='')
+parser.add_argument('--set_std_mean', action='store_true', help='')
+parser.add_argument('--std', type=float, default=0.5, help='')
+parser.add_argument('--mean', type=float, default=0.5, help='')
 parser.add_argument('--num_workers', type=int, default=2, help='number of data loading workers')
 parser.add_argument('--batch_size', type=int, default=2, help='input batch size')
 parser.add_argument('--imgH', type=int, default=32, help='the height of the input image to network')
@@ -185,17 +188,22 @@ if __name__ == '__main__':
     # store model path
     if not os.path.exists(arg.expr):
         os.mkdir(arg.expr)
-    std_mean=json.load(open(arg.std_mean_file))
+    if arg.set_std_mean:
+        std_mean=(arg.std,arg.mean)
+    else:
+        std_mean=json.load(open(arg.std_mean_file))
+        std_mean=(std_mean['L']['std'],std_mean['L']['mean'])
+    print('std_mean',std_mean)
     # read train set
     train_dataset = Dataset(
         arg.train_image_root,
         arg.train_root,
-        std_mean=(std_mean['L']['std'],std_mean['L']['mean'])
+        std_mean=std_mean
     )
     valid_dataset = Dataset(
         arg.valid_image_root,
         arg.valid_root,
-        std_mean=(std_mean['L']['std'],std_mean['L']['mean'])
+        std_mean=std_mean
     )
 
     train_loader = DataLoader(train_dataset, batch_size=arg.batch_size, shuffle=True, num_workers=arg.num_workers, drop_last=True)
