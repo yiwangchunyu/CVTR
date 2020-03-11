@@ -276,7 +276,7 @@ class DataSaver():
             print('-------------------------------------------------------')
             f.write('-------------------------------------------------------\n')
             #数据mean，std
-            compute_std_mean(arg.trainRoot,arg.trainLabelPath, imgW=280, imgH=32, rgb=True)
+            compute_std_mean(arg.trainRoot,arg.trainLabelPath, imgW=280, imgH=32)
 
 def main():
     print('deleting files...',arg.trainRoot,arg.validRoot)

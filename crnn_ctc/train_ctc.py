@@ -1,4 +1,6 @@
 from __future__ import print_function
+
+import json
 import sys
 sys.path.append('../')
 from torch.utils.data import DataLoader
@@ -23,10 +25,12 @@ parser.add_argument('--valid_root', default='../data/images/valid_label.txt', he
 parser.add_argument('--train_image_root', default='../data/images/train',help='')
 parser.add_argument('--valid_image_root', default='../data/images/valid',help='')
 parser.add_argument('--alphabet', default='../data/images/alphabet.txt', help='')
+parser.add_argument('--direction', type=str, default='horizontal', help='')
+parser.add_argument('--std_mean_file', type=str, default='../data/images/desc/mean_std.json', help='')
 parser.add_argument('--num_workers', type=int, default=2, help='number of data loading workers')
 parser.add_argument('--batch_size', type=int, default=2, help='input batch size')
 parser.add_argument('--imgH', type=int, default=32, help='the height of the input image to network')
-parser.add_argument('--imgW', type=int, default=160, help='the width of the input image to network')
+parser.add_argument('--imgW', type=int, default=280, help='the width of the input image to network')
 parser.add_argument('--nepoch', type=int, default=300, help='number of epochs to train for')
 parser.add_argument('--cuda', action='store_true', default=False,help='enables cuda')
 parser.add_argument('--opt', default='adam', help='select optimizer')
@@ -181,9 +185,18 @@ if __name__ == '__main__':
     # store model path
     if not os.path.exists(arg.expr):
         os.mkdir(arg.expr)
+    std_mean=json.load(open(arg.std_mean_file))
     # read train set
-    train_dataset = Dataset(arg.train_image_root, arg.train_root,)
-    valid_dataset = Dataset(arg.valid_image_root, arg.valid_root)
+    train_dataset = Dataset(
+        arg.train_image_root,
+        arg.train_root,
+        std_mean=(std_mean['L']['std'],std_mean['L']['mean'])
+    )
+    valid_dataset = Dataset(
+        arg.valid_image_root,
+        arg.valid_root,
+        std_mean=(std_mean['L']['std'],std_mean['L']['mean'])
+    )
 
     train_loader = DataLoader(train_dataset, batch_size=arg.batch_size, shuffle=True, num_workers=arg.num_workers, drop_last=True)
     valid_loader = DataLoader(valid_dataset, batch_size=arg.batch_size, shuffle=True, num_workers=arg.num_workers, drop_last=True)
