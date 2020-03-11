@@ -2,6 +2,8 @@ import matplotlib.pyplot as plt
 class Plot():
     def __init__(self,nepoch,fname='data/loss.png'):
         self.loss=[]
+        self.valid_loss=[]
+        self.valid_epoch=[]
         self.accs=[]
         self.errs = []
         self.accs_index = []
@@ -17,6 +19,11 @@ class Plot():
         self.errs.append(1-acc)
         self.accs_index.append(epoch)
 
+    def add_valid_loss(self,loss,epoch):
+        self.valid_loss.append(loss)
+        self.valid_epoch.append(epoch)
+
+
     def show(self):
         loss_x=[ (i+1)*(self.nepoch/len(self.loss)) for i in range(len(self.loss))]
         loss_y=self.loss
@@ -29,7 +36,8 @@ class Plot():
 
         fig, ax1 = plt.subplots()
         ax2 = ax1.twinx()
-        ax1.plot(loss_x, loss_y, 'b-', label='loss')
+        ax1.plot(loss_x, loss_y, 'b-', label='train loss')
+        ax1.plot(self.valid_epoch, self.valid_loss, 'c-', label='train loss')
         ax2.plot(accs_x, accs_y, 'g-', label='accuracy')
         ax2.plot(errs_x, errs_y, 'r-', label='error rate')
         ax1.set_xlabel("epoch index")
