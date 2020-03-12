@@ -33,7 +33,7 @@ parser.add_argument('--mean', type=float, default=0.5, help='')
 parser.add_argument('--num_workers', type=int, default=2, help='number of data loading workers')
 parser.add_argument('--batch_size', type=int, default=2, help='input batch size')
 parser.add_argument('--imgH', type=int, default=32, help='the height of the input image to network')
-parser.add_argument('--imgW', type=int, default=280, help='the width of the input image to network')
+parser.add_argument('--imgW', type=int, default=160, help='the width of the input image to network')
 parser.add_argument('--nepoch', type=int, default=300, help='number of epochs to train for')
 parser.add_argument('--cuda', action='store_true', default=False,help='enables cuda')
 parser.add_argument('--opt', default='adam', help='select optimizer')
@@ -198,12 +198,16 @@ if __name__ == '__main__':
     train_dataset = Dataset(
         arg.train_image_root,
         arg.train_root,
-        std_mean=std_mean
+        std_mean=std_mean,
+        imgW=arg.imgW,
+        imgH=arg.imgH
     )
     valid_dataset = Dataset(
         arg.valid_image_root,
         arg.valid_root,
-        std_mean=std_mean
+        std_mean=std_mean,
+        imgW=arg.imgW,
+        imgH=arg.imgH
     )
 
     train_loader = DataLoader(train_dataset, batch_size=arg.batch_size, shuffle=True, num_workers=arg.num_workers, drop_last=True)
