@@ -36,14 +36,18 @@ class Plot():
 
         fig, ax1 = plt.subplots()
         ax2 = ax1.twinx()
-        ax1.plot(loss_x, loss_y, 'b-', label='train loss')
-        ax1.plot(self.valid_epoch, self.valid_loss, 'c-', label='train loss')
-        ax2.plot(accs_x, accs_y, 'g-', label='accuracy')
-        ax2.plot(errs_x, errs_y, 'r-', label='error rate')
+        lns11 = ax1.plot(loss_x, loss_y, 'b-', label='train loss')
+        lns12 = ax1.plot(self.valid_epoch, self.valid_loss, 'c-', label='train loss')
+        lns21 = ax2.plot(accs_x, accs_y, 'g-', label='accuracy')
+        lns22 = ax2.plot(errs_x, errs_y, 'r-', label='error rate')
+
+        lns = lns11 + lns12 + lns21 + lns22
+        labs = [l.get_label() for l in lns]
+        ax1.legend(lns, labs, loc=7)
+
         ax1.set_xlabel("epoch index")
         ax1.set_ylabel("loss", color='b')
-        ax2.set_ylabel("accuracy/error")
-        fig.legend(loc=9)
-        # plt.plot(loss_x,self.loss)
+        ax2.set_ylabel("acc/error")
+
         plt.savefig(self.fname,dpi=500)
         plt.show()

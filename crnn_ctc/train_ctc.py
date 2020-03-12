@@ -15,7 +15,7 @@ import numpy as np
 # from warpctc_pytorch import CTCLoss
 import os
 # import utils_ctc
-import crnn
+import crnn_ctc
 import utils_ctc
 import utils
 
@@ -30,11 +30,11 @@ parser.add_argument('--std_mean_file', type=str, default='../data/images/desc/me
 parser.add_argument('--set_std_mean', action='store_true', help='')
 parser.add_argument('--std', type=float, default=0.5, help='')
 parser.add_argument('--mean', type=float, default=0.5, help='')
-parser.add_argument('--num_workers', type=int, default=2, help='number of data loading workers')
-parser.add_argument('--batch_size', type=int, default=2, help='input batch size')
+parser.add_argument('--num_workers', type=int, default=4, help='number of data loading workers')
+parser.add_argument('--batch_size', type=int, default=16, help='input batch size')
 parser.add_argument('--imgH', type=int, default=32, help='the height of the input image to network')
 parser.add_argument('--imgW', type=int, default=160, help='the width of the input image to network')
-parser.add_argument('--nepoch', type=int, default=300, help='number of epochs to train for')
+parser.add_argument('--nepoch', type=int, default=3, help='number of epochs to train for')
 parser.add_argument('--cuda', action='store_true', default=False,help='enables cuda')
 parser.add_argument('--opt', default='adam', help='select optimizer')
 parser.add_argument('--nc', type=int, default=1, help='')
@@ -106,8 +106,8 @@ def val(crnn, valid_loader, criterion, epoch, max_i=1000):
     print(n_correct)
     print(i * arg.batch_size)
     accuracy = n_correct / float(i * arg.batch_size)
-    print('Test loss: %f, accuray: %f' % (loss_avg.val(), accuracy))
-
+    print('valid loss: %f, accuray: %f' % (loss_avg.val(), accuracy))
+    plot.add_valid_loss(loss_avg.val(),epoch+1)
     return accuracy
 
 def train(crnn, train_loader, criterion, epoch):
@@ -153,7 +153,7 @@ def main(crnn, train_loader, valid_loader, criterion, optimizer):
     crnn = crnn.to(device)
     criterion = criterion.to(device)
     epoch = 0
-    best_accuracy = 0.5
+    best_accuracy = 0
     while epoch < arg.nepoch:
         train(crnn, train_loader, criterion, epoch)
         ## max_i: cut down the consuming time of testing, if you'd like to validate on the whole testset, please set it to len(val_loader)
@@ -225,7 +225,7 @@ if __name__ == '__main__':
     # criterion = CTCLoss()
 
     # cnn and rnn
-    crnn = crnn.CRNN(arg.imgH, nc, nclass, nh)
+    crnn = crnn_ctc.CRNN(arg.imgH, nc, nclass, nh)
     print(crnn)
     crnn.apply(weights_init)
     # if params.crnn != '':
