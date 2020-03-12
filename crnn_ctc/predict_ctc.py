@@ -3,7 +3,7 @@ from PIL import Image
 from torch.autograd import Variable
 from torchvision.transforms import ToTensor
 
-from crnn_ctc import crnn_ctc, utils_ctc
+import crnn_ctc, utils_ctc
 
 
 def process_img(img_path):
@@ -16,11 +16,10 @@ def process_img(img_path):
     return image
 
 def predict(pth='expr/crnn_best.pth', img_path=''):
-    with open('../data/images.alphabet.txt') as f:
+    with open('../data/images/alphabet.txt',encoding='utf-8') as f:
         alphabet=f.read()
     nclass=len(alphabet)+1
     converter = utils_ctc.strLabelConverter(alphabet)
-    transformer=''
     batch_size=1
 
     image=process_img(img_path)
@@ -41,8 +40,8 @@ def predict(pth='expr/crnn_best.pth', img_path=''):
     raw_preds = converter.decode(preds.data, preds_size.data, raw=True)
 
     print(raw_preds)
-    predict(sim_preds)
-
+    print(sim_preds)
+    return sim_preds
 
 if __name__=='__main__':
-    predict(img_path='data/images/test/test_0.png')
+    predict(img_path='../data/images/test/test_0.png')
