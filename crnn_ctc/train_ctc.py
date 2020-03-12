@@ -25,7 +25,7 @@ parser.add_argument('--valid_root', default='../data/images/valid_label.txt', he
 parser.add_argument('--train_image_root', default='../data/images/train',help='')
 parser.add_argument('--valid_image_root', default='../data/images/valid',help='')
 parser.add_argument('--alphabet', default='../data/images/alphabet.txt', help='')
-parser.add_argument('--direction', type=str, default='horizontal', help='')
+parser.add_argument('--direction', type=str, default='vertical', help='')
 parser.add_argument('--std_mean_file', type=str, default='../data/images/desc/mean_std.json', help='')
 parser.add_argument('--set_std_mean', action='store_true', help='')
 parser.add_argument('--std', type=float, default=0.5, help='')
@@ -200,14 +200,16 @@ if __name__ == '__main__':
         arg.train_root,
         std_mean=std_mean,
         imgW=arg.imgW,
-        imgH=arg.imgH
+        imgH=arg.imgH,
+        direction=arg.direction
     )
     valid_dataset = Dataset(
         arg.valid_image_root,
         arg.valid_root,
         std_mean=std_mean,
         imgW=arg.imgW,
-        imgH=arg.imgH
+        imgH=arg.imgH,
+        direction=arg.direction
     )
 
     train_loader = DataLoader(train_dataset, batch_size=arg.batch_size, shuffle=True, num_workers=arg.num_workers, drop_last=True)
@@ -233,12 +235,12 @@ if __name__ == '__main__':
     # loss_avg = utils.averager()
 
     # setup optimizer
-    optimizer = optim.Adam(crnn.parameters(), lr=arg.lr,
-                               betas=(0.99, 0.999))
+    # optimizer = optim.Adam(crnn.parameters(), lr=arg.lr,
+    #                            betas=(0.99, 0.999))
 
     # optimizer = optim.Adadelta(crnn.parameters(), lr=params.lr)
 
-    # optimizer = optim.RMSprop(crnn.parameters(), lr=params.lr)
+    optimizer = optim.RMSprop(crnn.parameters(), lr=arg.lr)
 
     crnn.register_backward_hook(backward_hook)
     main(crnn, train_loader, valid_loader, criterion, optimizer)

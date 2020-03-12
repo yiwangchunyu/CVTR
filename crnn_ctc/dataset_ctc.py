@@ -51,3 +51,4 @@ if __name__ == '__main__':
     dataloader = DataLoader(dataset, batch_size=8, shuffle=True, drop_last=True)
     for i_batch, (image, index) in enumerate(dataloader):
         print(image.shape)
+        print(index)
