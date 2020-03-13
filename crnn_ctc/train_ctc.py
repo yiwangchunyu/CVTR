@@ -198,7 +198,7 @@ if __name__ == '__main__':
     else:
         std_mean=json.load(open(arg.std_mean_file))
         std_mean=(std_mean['L']['std'],std_mean['L']['mean'])
-    print('std_mean',std_mean)
+
     # read train set
     train_dataset = Dataset(
         arg.train_image_root,
@@ -233,6 +233,7 @@ if __name__ == '__main__':
     print(crnn)
     print('CNN structure:')
     summary(crnn_ctc.CNN(arg.imgH, nc, nclass, nh), input_size=(nc, arg.imgH, arg.imgW))
+    print('std_mean', std_mean)
     crnn.apply(weights_init)
     # if params.crnn != '':
     #     print('loading pretrained model from %s' % params.crnn)

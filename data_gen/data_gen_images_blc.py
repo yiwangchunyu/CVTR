@@ -219,7 +219,7 @@ class DataSaver():
     def save(self,img,label,type=1):
 
         if type==1:
-            fname='train_%d.png' % (self.train_id)
+            fname='train_%010d.png' % (self.train_id)
             img.save(os.path.join(self.trainRoot,fname))
             self.train_labels_file.write("%s %s\n"%(fname, label))
             self.train_id += 1
@@ -227,13 +227,13 @@ class DataSaver():
 
         elif type==2:
             # 保存为验证样本
-            fname = 'valid_%d.png' % (self.valid_id)
+            fname = 'valid_%010d.png' % (self.valid_id)
             img.save(os.path.join(self.validRoot, fname))
             self.valid_labels_file.write("%s %s\n"%(fname, label))
             self.valid_id += 1
             self.counter_valid.update(label)
         else:
-            fname = 'test_%d.png' % (self.test_id)
+            fname = 'test_%010d.png' % (self.test_id)
             img.save(os.path.join(self.testRoot, fname))
             self.test_labels_file.write("%s %s\n"%(fname, label))
             self.test_id += 1
