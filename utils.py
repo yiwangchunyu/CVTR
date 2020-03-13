@@ -38,10 +38,11 @@ class Plot():
         ax2 = ax1.twinx()
         lns11 = ax1.plot(loss_x, loss_y, 'b-', label='train loss')
         lns12 = ax1.plot(self.valid_epoch, self.valid_loss, 'c-', label='train loss')
-        lns21 = ax2.plot(accs_x, accs_y, 'g-', label='accuracy')
+        # lns21 = ax2.plot(accs_x, accs_y, 'g-', label='accuracy')
         lns22 = ax2.plot(errs_x, errs_y, 'r-', label='error rate')
 
-        lns = lns11 + lns12 + lns21 + lns22
+        # lns = lns11 + lns12 + lns21 + lns22
+        lns = lns11 + lns12 + lns22
         labs = [l.get_label() for l in lns]
         ax1.legend(lns, labs, loc=7)
 

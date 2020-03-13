@@ -166,7 +166,7 @@ def main(crnn, train_loader, valid_loader, criterion, optimizer):
         if accuracy > best_accuracy:
             best_accuracy = accuracy
             # torch.save(crnn.state_dict(), '{0}/crnn_Rec_done_{1}_{2}.pth'.format('./expr', epoch, accuracy))
-            torch.save(crnn.state_dict(), '{0}/crnn_best.pth'.format('./expr'))
+            torch.save(crnn.state_dict(), '{0}/crnn_best_50.pth'.format('./expr'))
             print("best accuracy update: {0}".format(accuracy))
         print("best accuracy: {0}".format(best_accuracy))
         torch.save(crnn.state_dict(), '{0}/crnn_Rec_done_{1}_{2}.pth'.format('./expr', epoch, accuracy))
