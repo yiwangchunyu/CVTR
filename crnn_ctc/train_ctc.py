@@ -231,8 +231,8 @@ if __name__ == '__main__':
     # cnn and rnn
     crnn = crnn_ctc.CRNN(arg.imgH, nc, nclass, nh)
     print(crnn)
-    print('CNN structure:')
-    summary(crnn_ctc.CNN(arg.imgH, nc, nclass, nh), input_size=(nc, arg.imgH, arg.imgW))
+    # print('CNN structure:')
+    # summary(crnn_ctc.CNN(arg.imgH, nc, nclass, nh), input_size=(nc, arg.imgH, arg.imgW))
     print('std_mean', std_mean)
     crnn.apply(weights_init)
     # if params.crnn != '':
