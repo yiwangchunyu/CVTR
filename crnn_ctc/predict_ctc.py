@@ -15,7 +15,7 @@ def process_img(img_path):
     image.sub_(0.5).div_(0.5)
     return image
 
-def predict(pth='expr/crnn_best.pth', img_path=''):
+def predict(pth='expr/crnn_best.pth', img_path='', display=True):
     with open('../data/images/alphabet.txt',encoding='utf-8') as f:
         alphabet=f.read()
     nclass=len(alphabet)+1
@@ -38,10 +38,11 @@ def predict(pth='expr/crnn_best.pth', img_path=''):
     sim_preds = converter.decode(preds.data, preds_size.data, raw=False)
 
     raw_preds = converter.decode(preds.data, preds_size.data, raw=True)
-
-    print(raw_preds)
-    print(sim_preds)
+    if display:
+        Image.open(img_path).show()
+        print(raw_preds)
+        print(sim_preds)
     return sim_preds
 
 if __name__=='__main__':
-    predict(img_path='../data/images/test/test_0.png')
+    predict(img_path='../data/images/test/test_6.png')
