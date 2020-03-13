@@ -68,7 +68,7 @@ def weights_init(m):
         m.bias.data.fill_(0)
 
 
-def val(crnn, valid_loader, criterion, epoch, max_i=1000):
+def val(crnn, valid_loader, criterion, epoch, max_i=3000):
 
     print('Start val')
     for p in crnn.parameters():
@@ -99,9 +99,11 @@ def val(crnn, valid_loader, criterion, epoch, max_i=1000):
             print('[%d/%d][%d/%d]' %
                       (epoch, arg.nepoch, i_batch, len(valid_loader)))
 
-        if i_batch == max_i:
+        i += 1
+
+        if i*arg.batch_size >= max_i:
             break
-        i+=1
+
     raw_preds = converter.decode(preds.data, preds_size.data, raw=True)[:arg.n_valid_disp]
     for raw_pred, pred, gt in zip(raw_preds, sim_preds, labels):
         print('%-20s => %-20s, gt: %-20s' % (raw_pred, pred, gt))
@@ -160,7 +162,7 @@ def main(crnn, train_loader, valid_loader, criterion, optimizer):
     while epoch < arg.nepoch:
         train(crnn, train_loader, criterion, epoch)
         ## max_i: cut down the consuming time of testing, if you'd like to validate on the whole testset, please set it to len(val_loader)
-        accuracy = val(crnn, valid_loader, criterion, epoch, max_i=1000)
+        accuracy = val(crnn, valid_loader, criterion, epoch, max_i=3000)
         for p in crnn.parameters():
             p.requires_grad = True
         if accuracy > best_accuracy:

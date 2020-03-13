@@ -15,6 +15,11 @@ def process_img(img_path, imgW=160, imgH=32):
     #图片保持比例转成32*280
     ratio = 280/32
     res=[]
+    def crop(img_crop):
+        res=[]
+
+
+        return res
 
     def process_single(image_single):
         image_singleW, image_singleH = image_single.size
