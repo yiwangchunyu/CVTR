@@ -53,7 +53,7 @@ parser.add_argument('--best_acc', type=float, default=0.5, help='')
 parser.add_argument('--keep_ratio', action='store_true', default=False,help='whether to keep ratio for image resize')
 parser.add_argument('--mean_std_file', type=str, default='../data/images/desc/mean_std.json', help='')
 arg = parser.parse_args()
-
+print(arg)
 
 # custom weights initialization called on crnn
 from dataset_ctc import Dataset
