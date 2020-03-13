@@ -46,7 +46,7 @@ parser.add_argument('--displayInterval', type=int, default=1, help='Interval to 
 parser.add_argument('--displayTrain', type=bool, default=False, help='Interval to be displayed')
 # parser.add_argument('--testInterval', type=int, default=1, help='Interval to be displayed')
 # parser.add_argument('--validInterval', type=int, default=1, help='Interval to be displayed')
-# parser.add_argument('--saveInterval', type=int, default=1, help='Interval to save model')
+parser.add_argument('--saveInterval', type=int, default=10, help='Interval to save model')
 parser.add_argument('--n_valid_disp', type=int, default=20, help='')
 parser.add_argument('--lr', type=float, default=0.001, help='learning rate for Critic, not used by adadealta')
 parser.add_argument('--best_acc', type=float, default=0.5, help='')
@@ -169,7 +169,10 @@ def main(crnn, train_loader, valid_loader, criterion, optimizer):
             torch.save(crnn.state_dict(), '{0}/crnn_best_50.pth'.format('./expr'))
             print("best accuracy update: {0}".format(accuracy))
         print("best accuracy: {0}".format(best_accuracy))
-        torch.save(crnn.state_dict(), '{0}/crnn_Rec_done_{1}_{2}.pth'.format('./expr', epoch, accuracy))
+        if (epoch + 1)%arg.saveInterval==0:
+            save_path = '{0}/crnn_Rec_done_{1}_{2}.pth'.format('./expr', epoch, accuracy)
+            print('model saved at:{}'.format(save_path))
+            torch.save(crnn.state_dict(), save_path)
         epoch+=1
         plot.add_acc(accuracy,epoch)
     plot.show()
