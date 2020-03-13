@@ -1,3 +1,4 @@
+import numpy as np
 import torch
 from PIL import Image
 from torch.autograd import Variable
@@ -39,9 +40,14 @@ def predict(pth='expr/crnn_best.pth', img_path='', display=True):
 
     raw_preds = converter.decode(preds.data, preds_size.data, raw=True)
     if display:
-        Image.open(img_path).show()
-        print(raw_preds)
-        print(sim_preds)
+        image = Image.open(img_path)
+        image_dsp = Image.new('RGB',(image.size[0]*2,image.size[1]),(0,255,255))
+        image_dsp = np.array(image_dsp)
+        image_dsp[:image.size[1],:image.size[0],:]=np.array(image)
+        image_dsp = Image.fromarray(image_dsp)
+        image_dsp.show()
+        print(len(raw_preds), raw_preds)
+        print(len(sim_preds), sim_preds)
     return sim_preds
 
 if __name__=='__main__':

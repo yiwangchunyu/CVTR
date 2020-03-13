@@ -2,6 +2,9 @@ from __future__ import print_function
 
 import json
 import sys
+
+from torchsummary import summary
+
 sys.path.append('../')
 from torch.utils.data import DataLoader
 import argparse
@@ -228,6 +231,8 @@ if __name__ == '__main__':
     # cnn and rnn
     crnn = crnn_ctc.CRNN(arg.imgH, nc, nclass, nh)
     print(crnn)
+    print('CNN structure:')
+    summary(crnn_ctc.CNN(arg.imgH, nc, nclass, nh), input_size=(nc, arg.imgH, arg.imgW))
     crnn.apply(weights_init)
     # if params.crnn != '':
     #     print('loading pretrained model from %s' % params.crnn)
