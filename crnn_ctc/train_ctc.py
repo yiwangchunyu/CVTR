@@ -42,7 +42,7 @@ parser.add_argument('--cuda', action='store_true', default=False,help='enables c
 parser.add_argument('--opt', default='adam', help='select optimizer')
 parser.add_argument('--nc', type=int, default=1, help='')
 parser.add_argument('--expr', default='expr', help='Where to store samples and models')
-parser.add_argument('--crnn', type='str', default='', help='')
+parser.add_argument('--crnn', type=str, default='', help='')
 parser.add_argument('--displayInterval', type=int, default=1, help='Interval to be displayed')
 parser.add_argument('--displayTrain', type=bool, default=False, help='Interval to be displayed')
 # parser.add_argument('--testInterval', type=int, default=1, help='Interval to be displayed')
