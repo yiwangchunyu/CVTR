@@ -42,6 +42,7 @@ parser.add_argument('--cuda', action='store_true', default=False,help='enables c
 parser.add_argument('--opt', default='adam', help='select optimizer')
 parser.add_argument('--nc', type=int, default=1, help='')
 parser.add_argument('--expr', default='expr', help='Where to store samples and models')
+parser.add_argument('--crnn', type='str', default='', help='')
 parser.add_argument('--displayInterval', type=int, default=1, help='Interval to be displayed')
 parser.add_argument('--displayTrain', type=bool, default=False, help='Interval to be displayed')
 # parser.add_argument('--testInterval', type=int, default=1, help='Interval to be displayed')
@@ -168,7 +169,7 @@ def main(crnn, train_loader, valid_loader, criterion, optimizer):
         if accuracy > best_accuracy:
             best_accuracy = accuracy
             # torch.save(crnn.state_dict(), '{0}/crnn_Rec_done_{1}_{2}.pth'.format('./expr', epoch, accuracy))
-            torch.save(crnn.state_dict(), '{0}/crnn_best_50.pth'.format('./expr'))
+            torch.save(crnn.state_dict(), '{0}/crnn_best_{1}.pth'.format('./expr',nclass-1))
             print("best accuracy update: {0}".format(accuracy))
         print("best accuracy: {0}".format(best_accuracy))
         if (epoch + 1)%arg.saveInterval==0:
@@ -240,9 +241,9 @@ if __name__ == '__main__':
     # summary(crnn_ctc.CNN(arg.imgH, nc, nclass, nh), input_size=(nc, arg.imgH, arg.imgW))
     print('std_mean', std_mean)
     crnn.apply(weights_init)
-    # if params.crnn != '':
-    #     print('loading pretrained model from %s' % params.crnn)
-    #     crnn.load_state_dict(torch.load(params.crnn))
+    if arg.crnn != '':
+        print('loading pretrained model from %s' % arg.crnn)
+        crnn.load_state_dict(torch.load(arg.crnn))
 
     # loss averager
     # loss_avg = utils.averager()
