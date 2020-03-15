@@ -5,6 +5,7 @@ import torch
 from PIL import Image, ImageColor, ImageDraw, ImageFont
 from torch.autograd import Variable
 from torchvision.transforms import ToTensor
+from tqdm import tqdm
 
 import crnn_ctc, utils_ctc
 
@@ -128,5 +129,11 @@ def predict(pth='expr/200/crnn_best_200.pth', img_path='', imgW=160,imgH=32, dis
         print(len(text), text)
     return raw_text,text
 
+def predictBatch():
+    img_names=os.listdir('../data/images/test/')
+    for img_name in tqdm(img_names):
+        predict(pth='expr/400/crnn_Rec_done_49_0.5234375.pth', img_path='../data/images/test/'+img_name)
+
 if __name__=='__main__':
-    print(predict(img_path='../data/images/test/test_00000000016.png'))
+    predictBatch()
+    # print(predict(pth='expr/400/crnn_Rec_done_49_0.5234375.pth',img_path='../data/images/test/test_0000000009.png'))
