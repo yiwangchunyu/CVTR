@@ -9,6 +9,7 @@ from collections import Counter
 
 import numpy as np
 from PIL import Image, ImageFont, ImageDraw, ImageFilter
+from scipy.stats import norm
 from tqdm import tqdm
 
 from data_gen.compute_stds_means import compute_std_mean
@@ -67,13 +68,25 @@ def sampleFont(fontRoot):
 
 
 def sampleWordColor():
-    font_color_choice = [[54, 54, 54], [54, 54, 54], [105, 105, 105]]
-    font_color = random.choice(font_color_choice)
-
-    noise = np.array([random.randint(0, 10), random.randint(0, 10), random.randint(0, 10)])
-    font_color = (np.array(font_color) + noise).tolist()
+    # font_color_choice = [[54, 54, 54], [54, 54, 54], [105, 105, 105]]
+    # font_color = random.choice(font_color_choice)
+    #
+    # noise = np.array([random.randint(0, 10), random.randint(0, 10), random.randint(0, 10)])
+    # font_color = (np.array(font_color) + noise).tolist()
 
     # print('font_color：',font_color)
+    #从正态分布中采样
+    rang = (0, 100)
+    loc = 10
+    scale = 40
+
+    cdf = (norm.cdf(rang[0], loc=loc, scale=scale), norm.cdf(rang[1], loc=loc, scale=scale))
+    x = cdf[0] + random.random() * (cdf[1] - cdf[0])
+    x = int(norm.ppf(x, loc=loc, scale=scale))
+    font_color=[x for i in range(3)]
+    # print(font_color)
+    noise = np.array([random.randint(0, 10), random.randint(0, 10), random.randint(0, 10)])
+    font_color = (np.array(font_color) + noise).tolist()
 
     return tuple(font_color)
 
@@ -103,11 +116,15 @@ def darkenFunc(image):
     # .MedianFilter(size=3)
     # 随机选取模糊参数
     filter_ = random.choice(
-        [ImageFilter.SMOOTH,
-         ImageFilter.SMOOTH_MORE,
-         ImageFilter.GaussianBlur(radius=1.3)]
+        [
+            ImageFilter.SMOOTH,
+            ImageFilter.SMOOTH_MORE,
+            # ImageFilter.GaussianBlur(radius=1.3),
+            ImageFilter.GaussianBlur(radius=1)
+        ]
     )
-    image = image.filter(filter_)
+    if random.random() < 0.5:
+        image = image.filter(filter_)
     # image = img.resize((290,32))
 
     return image
@@ -262,7 +279,7 @@ class DataSaver():
             print('-------------------------------------------------------')
             f.write('-------------------------------------------------------\n')
             #数据mean，std
-            compute_std_mean(arg.trainRoot, arg.trainLabelPath, imgW=280, imgH=32, rgb=True)
+            compute_std_mean(arg.trainRoot, arg.trainLabelPath, imgW=280, imgH=32)
 
 def main():
     print('deleting files...',arg.trainRoot,arg.validRoot)
@@ -300,12 +317,12 @@ if __name__=="__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('--trans', type=bool, default=True, help='transform to traditinal chinese charactor')
     parser.add_argument('--blc', type=bool, default=True, help='')
-    # parser.add_argument('--direction', type=str, default='vertical', help='')
-    parser.add_argument('--direction', type=str, default='horizontal', help='')
+    parser.add_argument('--direction', type=str, default='vertical', help='')
+    # parser.add_argument('--direction', type=str, default='horizontal', help='')
     # parser.add_argument('--num_class', type=int, default=10, help='')
-    parser.add_argument('--num_train', type=int, default=3000, help='')
-    parser.add_argument('--num_valid', type=int, default=1000, help='')
-    parser.add_argument('--num_test', type=int, default=1000, help='')
+    parser.add_argument('--num_train', type=int, default=30, help='')
+    parser.add_argument('--num_valid', type=int, default=10, help='')
+    parser.add_argument('--num_test', type=int, default=10, help='')
     parser.add_argument('--trainRoot', type=str, default='../data/images/train', help='')
     parser.add_argument('--validRoot', type=str, default='../data/images/valid', help='')
     parser.add_argument('--testRoot', type=str, default='../data/images/test', help='')

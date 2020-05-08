@@ -129,11 +129,11 @@ def predict(pth='expr/200/crnn_best_200.pth', img_path='', imgW=160,imgH=32, dis
         print(len(text), text)
     return raw_text,text
 
-def predictBatch():
-    img_names=os.listdir('../data/images/test/')
+def predictBatch(root='../data/images/test/'):
+    img_names=os.listdir(root)
     for img_name in tqdm(img_names):
-        predict(pth='expr/400/crnn_Rec_done_49_0.5234375.pth', img_path='../data/images/test/'+img_name)
+        predict(pth='expr/800/crnn_best_800.pth', img_path=root+img_name)
 
 if __name__=='__main__':
     predictBatch()
-    # print(predict(pth='expr/400/crnn_Rec_done_49_0.5234375.pth',img_path='../data/images/test/test_0000000009.png'))
+    # print(predict(pth='expr/800/crnn_best_800.pth',img_path='../data/images/test/test_0000000009.png'))
